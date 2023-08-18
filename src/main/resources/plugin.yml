@@ -1,0 +1,7 @@
+name: mirror
+version: '${version}'
+main: com.sulaxan.mirror.Mirror
+api-version: '1.20'
+
+commands:
+  mirror:
