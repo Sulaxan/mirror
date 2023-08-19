@@ -112,14 +112,7 @@ public class MirrorBox {
 
     public void update() {
         currentTick++;
-        // every 5 ticks
-        if (currentTick % 5 != 0) {
-            return;
-        }
-
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            CraftPlayer craftPlayer = (CraftPlayer) p;
-        }
+        // nothing... yet
     }
 
     public void createNpc(Player player) {
