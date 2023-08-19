@@ -1,13 +1,33 @@
 # mirror
 A mirror in Minecraft: "reflects" players and their actions.
 
+**This will only work for Minecraft (Spigot) 1.20.1!**
+
 This is heavily inspired by the Mirrorverse
 [<sup>[1]</sup>](https://wiki.hypixel.net/Mirrorverse) 
 [<sup>[2]</sup>](https://hypixel-skyblock.fandom.com/wiki/Mirrorverse) 
 on Hypixel Skyblock. There really isn't much purpose in this, other than being something cool I saw that I wanted to
 recreate. Feel free to use the code for whatever.
 
-**This will only work for Minecraft (Spigot) 1.20.1**
+[video showcase when I get around to it]
+
+## Usage
+
+You can compile using
+```shell
+# unix
+gradlew build
+
+# windows
+gradlew.bat build
+```
+Add the compiled plugin to your Spigot 1.20.1 server, and restart.
+
+### Commands
+
+#### /mirror
+This will create a mirror box around you. Standing on either side of the glass within the box will reflect you onto the
+other side.
 
 ## Some Disclaimers
 
