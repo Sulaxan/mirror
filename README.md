@@ -10,6 +10,7 @@ on Hypixel Skyblock. There really isn't much purpose in this, other than being s
 recreate. Feel free to use the code for whatever.
 
 [![Mirror Showcase](./examples/mirror.gif)](./examples/mirror.gif)
+
 You may notice a few inconsistencies here, namely held blocks not appearing on the right hand and no sneaking. Keep in
 mind this doesn't strive to be a perfect mirror implementation. See [Some Disclaimers](#some-disclaimers).
 
