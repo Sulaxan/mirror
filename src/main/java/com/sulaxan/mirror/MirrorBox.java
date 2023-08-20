@@ -1,36 +1,26 @@
 package com.sulaxan.mirror;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
+import com.mojang.authlib.GameProfile;
 import com.sulaxan.mirror.packet.PacketHandler;
 import com.sulaxan.mirror.packet.PacketInterceptor;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_20_R1.profile.CraftPlayerProfile;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -122,17 +112,15 @@ public class MirrorBox {
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
-        var profile = new CraftPlayerProfile(UUID.randomUUID(), StringUtils.reverse(player.getName()));
-        profile.setTextures(craftPlayer.getPlayerProfile().getTextures());
-        var gameProfile = profile.buildGameProfile();
-        gameProfile.getProperties().putAll(craftPlayer.getProfile().getProperties());
+        var gameProfile = new GameProfile(UUID.randomUUID(), StringUtils.reverse(player.getName()));
+        gameProfile.getProperties().putAll("textures", craftPlayer.getProfile().getProperties().get("textures"));
 
         var npc = new ServerPlayer(
                 MinecraftServer.getServer(),
                 MinecraftServer.getServer().overworld(),
                 gameProfile
         );
-        npc.setPos(player.getLocation().getX(), player.getLocation().getY() + 3, player.getLocation().getZ());
+        npc.getBukkitEntity().getPlayerProfile().getTextures().setSkin(player.getPlayerProfile().getTextures().getSkin());
 
         ClientboundPlayerInfoUpdatePacket packet = new ClientboundPlayerInfoUpdatePacket(
                 ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER,
@@ -146,10 +134,11 @@ public class MirrorBox {
         npcs.put(player.getUniqueId().toString(), npc);
     }
 
-    public void destroyNpc(Player player) {
+    // returns true if the npc was destroyed for the player
+    public boolean destroyNpc(Player player) {
         var npc = npcs.remove(player.getUniqueId().toString());
         if (npc == null) {
-            return;
+            return false;
         }
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
@@ -161,6 +150,7 @@ public class MirrorBox {
 
         craftPlayer.getHandle().connection.send(packet);
         craftPlayer.getHandle().connection.send(packet2);
+        return true;
     }
 
     public void constructBox() {

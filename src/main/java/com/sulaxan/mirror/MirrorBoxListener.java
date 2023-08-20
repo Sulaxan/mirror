@@ -31,8 +31,14 @@ public class MirrorBoxListener implements Listener {
             return;
         }
         if (box.isInside(e.getFrom()) && !box.isInside(e.getTo())) {
-            box.destroyNpc(e.getPlayer());
-            box.getPacketInterceptor().stopIntercepting(e.getPlayer());
+            // only stop intercepting if we successfully destroy the npc (also an indicator that this player was in the
+            // mirror to begin with)
+            // this fixes a bug where if the user starts off within the mirror when it is created and leaves it,
+            // there'll be an error since we try to stop intercepting for a player who wasn't being intercepted in the
+            // first place
+            if (box.destroyNpc(e.getPlayer())) {
+                box.getPacketInterceptor().stopIntercepting(e.getPlayer());
+            }
         }
     }
 

@@ -9,7 +9,7 @@ This is heavily inspired by the Mirrorverse
 on Hypixel Skyblock. There really isn't much purpose in this, other than being something cool I saw that I wanted to
 recreate. Feel free to use the code for whatever.
 
-[video showcase when I get around to it]
+[![showcase](./examples/mirror.mp4)](./examples/mirror.mp4)
 
 ## Usage
 
